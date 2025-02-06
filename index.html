@@ -6,11 +6,11 @@
     <title>To-Do List</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-10 flex flex-col items-center">
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md text-center">
-        <h1 class="text-2xl font-bold mb-4">24-Hour To-Do List</h1>
-        <button id="addTask" class="mb-4 px-4 py-2 bg-blue-500 text-white rounded">ADD TASK</button>
-        <div id="taskList" class="space-y-4">
+<body class="bg-gray-100 p-0 flex flex-col items-center min-h-screen w-full">
+    <div class="w-full max-w-6xl mx-0 bg-white p-10 rounded-lg shadow-md text-center min-h-screen">
+        <h1 class="text-3xl font-bold mb-6">24-Hour To-Do List</h1>
+        <button id="addTask" class="mb-6 px-6 py-3 bg-blue-500 text-white rounded text-lg">ADD TASK</button>
+        <div id="taskList" class="space-y-6 w-full">
             <!-- Time Blocks will be added dynamically -->
         </div>
     </div>
@@ -35,25 +35,25 @@
                 for (let m = 30; m < 60; m += 30) {
                     let timeSlot = formatTime(hour, m % 60);
                     let taskBlock = document.createElement("div");
-                    taskBlock.classList.add("p-4", "border", "rounded", "bg-gray-50", "text-center");
+                    taskBlock.classList.add("p-6", "border", "rounded", "bg-gray-50", "text-center", "w-full");
                     taskBlock.innerHTML = `
-                        <div class="flex items-center justify-center space-x-4">
-                            <input type="checkbox" class="toggleTask w-5 h-5"/>
+                        <div class="flex items-center justify-center space-x-6 text-lg w-full">
+                            <input type="checkbox" class="toggleTask w-6 h-6"/>
                             <span class="font-semibold">${timeSlot}</span>
-                            <input type="checkbox" class="missedTask w-5 h-5"/>
+                            <input type="checkbox" class="missedTask w-6 h-6"/>
                         </div>
-                        <textarea class="taskInput w-full mt-2 p-2 border rounded hidden text-center" placeholder="Add task..."></textarea>
-                        <p class="taskText mt-2 text-center"></p>
+                        <textarea class="taskInput w-full mt-4 p-3 border rounded hidden text-center text-lg" placeholder="Add task..."></textarea>
+                        <p class="taskText mt-4 text-center text-lg"></p>
                     `;
                     taskList.appendChild(taskBlock);
                 }
             }
             
             addTaskButton.addEventListener("click", () => {
-                document.querySelectorAll(".taskInput").forEach(input => {
-                    input.classList.remove("hidden");
-                    input.focus();
-                });
+                document.querySelectorAll(".taskInput").forEach(input => input.classList.remove("hidden"));
+                setTimeout(() => {
+                    document.querySelectorAll(".taskInput").forEach(input => input.classList.add("hidden"));
+                }, 7000);
             });
             
             taskList.addEventListener("click", (event) => {
@@ -80,10 +80,9 @@
             
             taskList.addEventListener("focusout", (event) => {
                 if (event.target.classList.contains("taskInput")) {
-                    let textArea = event.target;
-                    if (textArea.value.trim() !== "") {
-                        textArea.classList.add("hidden");
-                    }
+                    setTimeout(() => {
+                        document.querySelectorAll(".taskInput").forEach(input => input.classList.add("hidden"));
+                    }, 7000);
                 }
             });
         });
