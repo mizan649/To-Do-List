@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 class="text-2xl font-bold mb-4">24-Hour Schedule</h2>
+        <ul id="todo-list" class="space-y-2">
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const todoList = document.getElementById("todo-list");
+                    for (let i = 0; i < 48; i++) {
+                        let hour = Math.floor(i / 2);
+                        let minutes = i % 2 === 0 ? "00" : "30";
+                        let nextHour = hour;
+                        let nextMinutes = i % 2 === 0 ? "30" : "00";
+                        if (i % 2 !== 0) nextHour++;
+                        let period = hour < 12 ? "AM" : "PM";
+                        let nextPeriod = nextHour < 12 ? "AM" : "PM";
+                        if (hour === 0) hour = 12;
+                        if (nextHour === 0) nextHour = 12;
+                        if (hour > 12) hour -= 12;
+                        if (nextHour > 12) nextHour -= 12;
+                        const timeLabel = `${hour}:${minutes} - ${nextHour}:${nextMinutes} ${nextPeriod}`;
+
+                        const li = document.createElement("li");
+                        li.className = "flex items-center justify-between p-2 bg-gray-200 rounded-lg";
+
+                        const checkbox = document.createElement("input");
+                        checkbox.type = "checkbox";
+                        checkbox.className = "mr-2";
+                        checkbox.addEventListener("change", function () {
+                            if (this.checked) {
+                                taskSpan.classList.add("line-through", "text-white");
+                                li.classList.add("bg-green-500");
+                            } else {
+                                taskSpan.classList.remove("line-through", "text-white");
+                                li.classList.remove("bg-green-500");
+                            }
+                        });
+
+                        const taskSpan = document.createElement("span");
+                        taskSpan.textContent = timeLabel + " - ";
+                        taskSpan.classList.add("outline-none");
+
+                        const editButton = document.createElement("button");
+                        editButton.textContent = "Edit";
+                        editButton.className = "ml-2 px-2 py-1 bg-blue-500 text-white rounded";
+                        editButton.addEventListener("click", function () {
+                            const newText = prompt("Edit your task:", taskSpan.textContent);
+                            if (newText !== null) {
+                                taskSpan.textContent = newText;
+                            }
+                        });
+
+                        li.appendChild(checkbox);
+                        li.appendChild(taskSpan);
+                        li.appendChild(editButton);
+                        todoList.appendChild(li);
+                    }
+                });
+            </script>
+        </ul>
+    </div>
+</body>
+</html>
