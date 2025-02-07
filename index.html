@@ -213,7 +213,7 @@
             function formatTime(hour, minute) {
                 let period = hour < 12 ? "AM" : "PM";
                 let displayHour = hour % 12 || 12;
-                let nextMinute = minute + 30;
+                let nextMinute = minute + 45; // 45 মিনিট যোগ করুন
                 let nextHour = hour;
                 if (nextMinute >= 60) {
                     nextMinute -= 60;
@@ -248,21 +248,19 @@
 
             for (let h = 5; h < 24 + 5; h++) {
                 let hour = h % 24;
-                for (let m = 0; m < 60; m += 30) {
-                    let timeSlot = formatTime(hour, m % 60);
-                    let taskBlock = document.createElement("div");
-                    taskBlock.classList.add("taskBlock");
-                    taskBlock.innerHTML = `
-            <div class="flex-items">
-                <input type="checkbox" class="toggleTask"/>
-                <span style="font-weight:bold; ">${timeSlot}</span>
-                <input type="checkbox" class="missedTask w-4 h-4"/>
-            </div>
-            <textarea class="taskInput" placeholder="Add task..."></textarea>
-            <p class="taskText"></p>
-        `;
-                    taskList.appendChild(taskBlock);
-                }
+                let timeSlot = formatTime(hour, 0); // 0 মিনিট থেকে শুরু করুন
+                let taskBlock = document.createElement("div");
+                taskBlock.classList.add("taskBlock");
+                taskBlock.innerHTML = `
+        <div class="flex-items">
+            <input type="checkbox" class="toggleTask w-4 h-4"/>
+            <span style="font-weight:bold; ">${timeSlot}</span>
+            <input type="checkbox" class="missedTask w-4 h-4"/>
+        </div>
+        <textarea class="taskInput" placeholder="Add task..."></textarea>
+        <p class="taskText"></p>
+    `;
+                taskList.appendChild(taskBlock);
             }
 
             loadTasks();
