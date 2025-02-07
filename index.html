@@ -19,6 +19,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             const taskList = document.getElementById("taskList");
             const addTaskButton = document.getElementById("addTask");
+            let closeTimeout;
             
             function formatTime(hour, minute) {
                 let period = hour < 12 ? "AM" : "PM";
@@ -51,9 +52,16 @@
             
             addTaskButton.addEventListener("click", () => {
                 document.querySelectorAll(".taskInput").forEach(input => input.classList.remove("hidden"));
-                setTimeout(() => {
-                    document.querySelectorAll(".taskInput").forEach(input => input.classList.add("hidden"));
-                }, 7000);
+                clearTimeout(closeTimeout);
+            });
+            
+            document.addEventListener("click", (event) => {
+                if (!event.target.closest("#taskList") && !event.target.closest("#addTask")) {
+                    clearTimeout(closeTimeout);
+                    closeTimeout = setTimeout(() => {
+                        document.querySelectorAll(".taskInput").forEach(input => input.classList.add("hidden"));
+                    }, 4000);
+                }
             });
             
             taskList.addEventListener("click", (event) => {
@@ -75,14 +83,6 @@
                     let text = textArea.value;
                     let taskText = textArea.nextElementSibling;
                     taskText.textContent = text;
-                }
-            });
-            
-            taskList.addEventListener("focusout", (event) => {
-                if (event.target.classList.contains("taskInput")) {
-                    setTimeout(() => {
-                        document.querySelectorAll(".taskInput").forEach(input => input.classList.add("hidden"));
-                    }, 7000);
                 }
             });
         });
