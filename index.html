@@ -2,88 +2,87 @@
 <html lang="en">
 
 <head>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>To-Do List</title>
-       <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100 p-0 flex flex-col items-center min-h-screen w-full">
-       <div class="w-full max-w-full mx-0 bg-white p-2 rounded-lg shadow-md text-center min-h-screen">
-              <div id="clock" class="text-4xl font-bold text-white bg-blue-500 p-8 rounded-lg mb-2"></div>
-              <div class="flex justify-between items-center mb-4">
-                     <h1 id="todoHeading"
-                            class="px-10 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded text-lg w-[50%] mr-2">
-                     </h1>
-                     <button id="addTask"
-                            class="px-10 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded text-lg w-[50%]">Add
-                            Task</button>
-              </div>
-              
-              <div id="taskList" class="space-y-6 w-full">
-                     <!-- Time Blocks will be added dynamically -->
-              </div>
-       </div>
+    <div class="w-full max-w-full mx-0 bg-white p-2 rounded-lg shadow-md text-center min-h-screen">
+        <div id="clock" class="text-4xl font-bold text-white bg-blue-500 p-8 rounded-lg mb-2"></div>
+        <div class="flex justify-between items-center mb-4">
+            <h1 id="todoHeading"
+                class="px-10 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded text-lg w-[50%] mr-2">
+            </h1>
+            <button id="addTask" class="px-10 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded text-lg w-[50%]">Add
+                Task</button>
+        </div>
 
-       <script>
-              document.addEventListener("DOMContentLoaded", () => {
-                     const taskList = document.getElementById("taskList");
-                     const addTaskButton = document.getElementById("addTask");
-                     const todoHeading = document.getElementById("todoHeading");
-                     const clock = document.getElementById("clock");
-                     let closeTimeout;
+        <div id="taskList" class="space-y-6 w-full">
+            <!-- Time Blocks will be added dynamically -->
+        </div>
+    </div>
 
-                     function updateClock() {
-                            const now = new Date();
-                            let hours = now.getHours();
-                            const minutes = now.getMinutes().toString().padStart(2, '0');
-                            const seconds = now.getSeconds().toString().padStart(2, '0');
-                            const ampm = hours >= 12 ? "PM" : "AM";
-                            hours = hours % 12 || 12;
-                            clock.textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
-                     }
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const taskList = document.getElementById("taskList");
+            const addTaskButton = document.getElementById("addTask");
+            const todoHeading = document.getElementById("todoHeading");
+            const clock = document.getElementById("clock");
+            let closeTimeout;
 
-                     setInterval(updateClock, 1000);
-                     updateClock();
+            function updateClock() {
+                const now = new Date();
+                let hours = now.getHours();
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
+                const ampm = hours >= 12 ? "PM" : "AM";
+                hours = hours % 12 || 12;
+                clock.textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+            }
 
-                     function formatTime(hour, minute) {
-                            let period = hour < 12 ? "AM" : "PM";
-                            let displayHour = hour % 12 || 12;
-                            let nextHour = (hour + (minute + 30) / 60) % 24;
-                            let nextMinute = (minute + 30) % 60;
-                            let displayNextHour = nextHour % 12 || 12;
-                            let nextPeriod = nextHour < 12 ? "AM" : "PM";
-                            return `${displayHour}:${minute.toString().padStart(2, '0')} ${period} - ${displayNextHour}:${nextMinute.toString().padStart(2, '0')} ${nextPeriod}`;
-                     }
+            setInterval(updateClock, 1000);
+            updateClock();
 
-                     function saveTasks() {
-                            let tasks = [];
-                            document.querySelectorAll(".taskText").forEach((task, index) => {
-                                   tasks.push(task.textContent.trim());
-                            });
-                            localStorage.setItem("tasks", JSON.stringify(tasks));
-                     }
+            function formatTime(hour, minute) {
+                let period = hour < 12 ? "AM" : "PM";
+                let displayHour = hour % 12 || 12;
+                let nextHour = (hour + (minute + 30) / 60) % 24;
+                let nextMinute = (minute + 30) % 60;
+                let displayNextHour = nextHour % 12 || 12;
+                let nextPeriod = nextHour < 12 ? "AM" : "PM";
+                return `${displayHour}:${minute.toString().padStart(2, '0')} ${period} - ${displayNextHour}:${nextMinute.toString().padStart(2, '0')} ${nextPeriod}`;
+            }
 
-                     function loadTasks() {
-                            let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-                            document.querySelectorAll(".taskText").forEach((task, index) => {
-                                   if (savedTasks[index]) {
-                                          task.textContent = savedTasks[index];
-                                   }
-                            });
-                     }
+            function saveTasks() {
+                let tasks = [];
+                document.querySelectorAll(".taskText").forEach((task, index) => {
+                    tasks.push(task.textContent.trim());
+                });
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+            }
 
-                     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                     const today = new Date().getDay();
-                     todoHeading.textContent = `${days[today]} `;
+            function loadTasks() {
+                let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+                document.querySelectorAll(".taskText").forEach((task, index) => {
+                    if (savedTasks[index]) {
+                        task.textContent = savedTasks[index];
+                    }
+                });
+            }
 
-                     for (let h = 5; h < 24 + 5; h++) {
-                            let hour = h % 24;
-                            for (let m = 30; m < 60; m += 30) {
-                                   let timeSlot = formatTime(hour, m % 60);
-                                   let taskBlock = document.createElement("div");
-                                   taskBlock.classList.add("p-6", "border", "rounded-lg", "bg-gray-50", "text-center", "w-full", "shadow-lg");
-                                   taskBlock.innerHTML = `
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const today = new Date().getDay();
+            todoHeading.textContent = `${days[today]} `;
+
+            for (let h = 5; h < 24 + 5; h++) {
+                let hour = h % 24;
+                for (let m = 30; m < 60; m += 30) {
+                    let timeSlot = formatTime(hour, m % 60);
+                    let taskBlock = document.createElement("div");
+                    taskBlock.classList.add("p-6", "border", "rounded-lg", "bg-gray-50", "text-center", "w-full", "shadow-lg");
+                    taskBlock.innerHTML = `
                         <div class="flex items-center justify-center space-x-6 text-md w-full">
                             <input type="checkbox" class="toggleTask w-4 h-4"/>
                             <span class="font-semibold">${timeSlot}</span>
@@ -92,50 +91,76 @@
                         <textarea class="taskInput w-full mt-4 p-3 border rounded hidden text-center text-lg" placeholder="Add task..."></textarea>
                         <p class="taskText mt-4 text-center text-lg"></p>
                     `;
-                                   taskList.appendChild(taskBlock);
-                            }
+                    taskList.appendChild(taskBlock);
+                }
+            }
+
+            loadTasks();
+
+            addTaskButton.addEventListener("click", () => {
+                document.querySelectorAll(".taskInput").forEach(input => input.classList.remove("hidden"));
+                clearTimeout(closeTimeout);
+            });
+
+            document.addEventListener("click", (event) => {
+                if (!event.target.closest("#taskList") && !event.target.closest("#addTask")) {
+                    clearTimeout(closeTimeout);
+                    closeTimeout = setTimeout(() => {
+                        document.querySelectorAll(".taskInput").forEach(input => input.classList.add("hidden"));
+                        saveTasks(1000);
+                    }, 1000);
+                }
+            });
+
+            taskList.addEventListener("click", (event) => {
+                if (event.target.classList.contains("toggleTask")) {
+                    let parent = event.target.closest("div").parentNode;
+                    parent.classList.toggle("bg-green-400");
+                    parent.querySelector(".taskText").classList.toggle("line-through");
+                    parent.querySelector("span").classList.toggle("line-through");
+                }
+                if (event.target.classList.contains("missedTask")) {
+                    let parent = event.target.closest("div").parentNode;
+                    parent.classList.toggle("bg-red-400");
+                }
+            });
+
+            taskList.addEventListener("input", (event) => {
+                if (event.target.classList.contains("taskInput")) {
+                    let textArea = event.target;
+                    let text = textArea.value;
+                    let taskText = textArea.nextElementSibling;
+                    taskText.textContent = text;
+                }
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+                     const taskList = document.getElementById("taskList");
+                     const addTaskButton = document.getElementById("addTask");
+                     let isEditing = false;
+
+                     function saveTasks() {
+                            let tasks = [];
+                            document.querySelectorAll(".taskText").forEach((task) => {
+                                   tasks.push(task.textContent.trim());
+                            });
+                            localStorage.setItem("tasks", JSON.stringify(tasks));
                      }
 
-                     loadTasks();
-
                      addTaskButton.addEventListener("click", () => {
-                            document.querySelectorAll(".taskInput").forEach(input => input.classList.remove("hidden"));
-                            clearTimeout(closeTimeout);
-                     });
-
-                     document.addEventListener("click", (event) => {
-                            if (!event.target.closest("#taskList") && !event.target.closest("#addTask")) {
-                                   clearTimeout(closeTimeout);
-                                   closeTimeout = setTimeout(() => {
-                                          document.querySelectorAll(".taskInput").forEach(input => input.classList.add("hidden"));
-                                          saveTasks();
-                                   }, 1000);
-                            }
-                     });
-
-                     taskList.addEventListener("click", (event) => {
-                            if (event.target.classList.contains("toggleTask")) {
-                                   let parent = event.target.closest("div").parentNode;
-                                   parent.classList.toggle("bg-green-400");
-                                   parent.querySelector(".taskText").classList.toggle("line-through");
-                                   parent.querySelector("span").classList.toggle("line-through");
-                            }
-                            if (event.target.classList.contains("missedTask")) {
-                                   let parent = event.target.closest("div").parentNode;
-                                   parent.classList.toggle("bg-red-400");
-                            }
-                     });
-
-                     taskList.addEventListener("input", (event) => {
-                            if (event.target.classList.contains("taskInput")) {
-                                   let textArea = event.target;
-                                   let text = textArea.value;
-                                   let taskText = textArea.nextElementSibling;
-                                   taskText.textContent = text;
+                            isEditing = !isEditing;
+                            if (isEditing) {
+                                   document.querySelectorAll(".taskInput").forEach(input => input.classList.remove("hidden"));
+                                   addTaskButton.textContent = "Done";
+                            } else {
+                                   document.querySelectorAll(".taskInput").forEach(input => input.classList.add("hidden"));
+                                   saveTasks();
+                                   addTaskButton.textContent = "Add Task";
                             }
                      });
               });
-       </script>
+    </script>
 </body>
 
 </html>
