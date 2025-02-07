@@ -162,6 +162,17 @@
             /* আপনি চাইলে এই মান পরিবর্তন করতে পারেন */
             font-weight: bold;
         }
+
+        /* চেকবক্সের কালার পরিবর্তন */
+        input[type="checkbox"].toggleTask {
+            accent-color: #34d399;
+            /* সবুজ কালার */
+        }
+
+        input[type="checkbox"].missedTask {
+            accent-color: #f87171;
+            /* লাল কালার */
+        }
     </style>
 </head>
 
@@ -202,8 +213,13 @@
             function formatTime(hour, minute) {
                 let period = hour < 12 ? "AM" : "PM";
                 let displayHour = hour % 12 || 12;
-                let nextHour = (hour + (minute + 30) / 60) % 24;
-                let nextMinute = (minute + 30) % 60;
+                let nextMinute = minute + 30;
+                let nextHour = hour;
+                if (nextMinute >= 60) {
+                    nextMinute -= 60;
+                    nextHour += 1;
+                }
+                nextHour = nextHour % 24;
                 let displayNextHour = nextHour % 12 || 12;
                 let nextPeriod = nextHour < 12 ? "AM" : "PM";
                 return `${displayHour}:${minute.toString().padStart(2, '0')} ${period} - ${displayNextHour}:${nextMinute.toString().padStart(2, '0')} ${nextPeriod}`;
@@ -238,7 +254,7 @@
                     taskBlock.classList.add("taskBlock");
                     taskBlock.innerHTML = `
             <div class="flex-items">
-                <input type="checkbox" class="toggleTask w-4 h-4"/>
+                <input type="checkbox" class="toggleTask"/>
                 <span style="font-weight:bold; ">${timeSlot}</span>
                 <input type="checkbox" class="missedTask w-4 h-4"/>
             </div>
