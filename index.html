@@ -31,6 +31,23 @@
                 return `${displayHour}:${minute.toString().padStart(2, '0')} ${period} - ${displayNextHour}:${nextMinute.toString().padStart(2, '0')} ${nextPeriod}`;
             }
             
+            function saveTasks() {
+                let tasks = [];
+                document.querySelectorAll(".taskText").forEach((task, index) => {
+                    tasks.push(task.textContent.trim());
+                });
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+            }
+            
+            function loadTasks() {
+                let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+                document.querySelectorAll(".taskText").forEach((task, index) => {
+                    if (savedTasks[index]) {
+                        task.textContent = savedTasks[index];
+                    }
+                });
+            }
+            
             for (let h = 5; h < 24 + 5; h++) {
                 let hour = h % 24;
                 for (let m = 30; m < 60; m += 30) {
@@ -50,6 +67,8 @@
                 }
             }
             
+            loadTasks();
+            
             addTaskButton.addEventListener("click", () => {
                 document.querySelectorAll(".taskInput").forEach(input => input.classList.remove("hidden"));
                 clearTimeout(closeTimeout);
@@ -60,6 +79,7 @@
                     clearTimeout(closeTimeout);
                     closeTimeout = setTimeout(() => {
                         document.querySelectorAll(".taskInput").forEach(input => input.classList.add("hidden"));
+                        saveTasks();
                     }, 4000);
                 }
             });
