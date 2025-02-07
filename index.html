@@ -2,319 +2,319 @@
 <html lang="en">
 
 <head>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>To-Do List</title>
-       <style>
-              /* background-color: #f6f3f3; */
-              body {
-                     background-color: #f3f4f6;
-                     /* লাল কালার */
-                     padding: 0;
-                     display: flex;
-                     flex-direction: column;
-                     align-items: center;
-                     min-height: 100vh;
-                     width: 100%;
-                     overflow-x: hidden;
-                     /* Prevent horizontal scrolling */
-                     margin: 0;
-                     /* Remove default margin */
-                     font-family: Arial, Helvetica, sans-serif;
-                     font-family: 'Courier New', Courier, monospace;
-                     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-                     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-              }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        /* background-color: #f6f3f3; */
+        body {
+            background-color: #f3f4f6;
+            /* লাল কালার */
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            /* Prevent horizontal scrolling */
+            margin: 0;
+            /* Remove default margin */
+            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-              .container {
-                     width: 100%;
-                     max-width: 1200px;
-                     /* আপনি চাইলে এই মান পরিবর্তন করতে পারেন */
-                     margin: 0 auto;
-                     /* Center the container */
-                     background-color: white;
-                     /* সবুজ কালার */
-                     padding: 8px;
-                     border-radius: 8px;
-                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                     text-align: center;
-                     min-height: 100vh;
-                     box-sizing: border-box;
-                     /* Ensure padding is included in width */
-              }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            /* আপনি চাইলে এই মান পরিবর্তন করতে পারেন */
+            margin: 0 auto;
+            /* Center the container */
+            background-color: white;
+            /* সবুজ কালার */
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            /* Ensure padding is included in width */
+        }
 
-              #clock {
-                     font-size: 2.25rem;
-                     font-weight: bold;
-                     color: white;
-                     background-color: #3b82f6;
-                     padding: 2rem;
-                     border-radius: 8px;
-                     margin-bottom: 8px;
-              }
+        #clock {
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: white;
+            background-color: #3b82f6;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
 
-              .flex-container {
-                     display: flex;
-                     gap: 10px;
-                     justify-content: space-between;
-                     align-items: center;
-                     margin-bottom: 1rem;
-                     /* flex-wrap: wrap; */
-                     /* Allow wrapping on smaller screens */
-              }
+        .flex-container {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            /* flex-wrap: wrap; */
+            /* Allow wrapping on smaller screens */
+        }
 
-              #todoHeading {
-                     padding: 0.75rem 2.5rem;
-                     background-color: #3b82f6;
-                     color: white;
-                     border-radius: 8px;
-                     font-size: 1.125rem;
-                     width: 50%;
-                     margin-right: 0.5rem;
-              }
+        #todoHeading {
+            padding: 0.75rem 2.5rem;
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 8px;
+            font-size: 1.125rem;
+            width: 50%;
+            margin-right: 0.5rem;
+        }
 
-              #addTask {
-                     padding: 0.75rem 2.5rem;
-                     background-color: #3b82f6;
-                     color: white;
-                     border: none;
-                     border-radius: 8px;
-                     font-size: 1.125rem;
-                     width: 50%;
-                     cursor: pointer;
-              }
+        #addTask {
+            padding: 0.75rem 2.5rem;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.125rem;
+            width: 50%;
+            cursor: pointer;
+        }
 
-              #addTask:hover {
-                     background-color: #2563eb;
-              }
+        #addTask:hover {
+            background-color: #2563eb;
+        }
 
-              #todoHeading,
-              #addTask {
-                     width: 100%;
-                     /* Full width on smaller screens */
-                     margin: 0;
-                     /* Add some margin for spacing */
-              }
+        #todoHeading,
+        #addTask {
+            width: 100%;
+            /* Full width on smaller screens */
+            margin: 0;
+            /* Add some margin for spacing */
+        }
 
-              #taskList {
-                     display: flex;
-                     flex-direction: column;
-                     gap: .8rem;
-                     width: 100%;
-              }
+        #taskList {
+            display: flex;
+            flex-direction: column;
+            gap: .8rem;
+            width: 100%;
+        }
 
-              .taskBlock {
-                     padding: 1.5rem;
-                     border: 1px solid #e5e7eb;
-                     border-radius: 8px;
-                     background-color: #f9fafb;
-                     text-align: center;
-                     width: 100%;
-                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                     box-sizing: border-box;
-                     /* Ensure padding is included in width */
-              }
+        .taskBlock {
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            /* Ensure padding is included in width */
+        }
 
-              .taskBlock .flex-items {
-                     display: flex;
-                     align-items: center;
-                     justify-content: center;
-                     gap: 1.5rem;
-                     font-size: 1rem;
-                     width: 100%;
-              }
+        .taskBlock .flex-items {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            font-size: 1rem;
+            width: 100%;
+        }
 
-              .taskInput {
-                     width: calc(100% - 1.5rem);
-                     /* Adjust width to account for padding */
-                     margin-top: 1rem;
-                     padding: 0.75rem;
-                     border: 1px solid #e5e7eb;
-                     border-radius: 8px;
-                     text-align: center;
-                     font-size: 1.125rem;
-                     display: none;
-                     box-sizing: border-box;
-                     /* Ensure padding is included in width */
-              }
+        .taskInput {
+            width: calc(100% - 1.5rem);
+            /* Adjust width to account for padding */
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.125rem;
+            display: none;
+            box-sizing: border-box;
+            /* Ensure padding is included in width */
+        }
 
-              .taskText {
-                     margin-top: 1rem;
-                     text-align: center;
-                     font-size: 1.125rem;
-              }
+        .taskText {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 1.125rem;
+        }
 
-              .bg-green-400 {
-                     background-color: #34d399;
-              }
+        .bg-green-400 {
+            background-color: #34d399;
+        }
 
-              .bg-red-400 {
-                     background-color: #f87171;
-              }
+        .bg-red-400 {
+            background-color: #f87171;
+        }
 
-              .line-through {
-                     text-decoration: line-through;
-              }
+        .line-through {
+            text-decoration: line-through;
+        }
 
-              .taskBlock .flex-items span {
-                     font-size: 1.2rem;
-                     /* আপনি চাইলে এই মান পরিবর্তন করতে পারেন */
-                     font-weight: bold;
-              }
-       </style>
+        .taskBlock .flex-items span {
+            font-size: 1.2rem;
+            /* আপনি চাইলে এই মান পরিবর্তন করতে পারেন */
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
-       <div class="container">
-              <div id="clock"></div>
-              <div class="flex-container">
-                     <h1 id="todoHeading"></h1>
-                     <button id="addTask">Add Task</button>
-              </div>
+    <div class="container">
+        <div id="clock"></div>
+        <div class="flex-container">
+            <h1 id="todoHeading"></h1>
+            <button id="addTask">Add Task</button>
+        </div>
 
-              <div id="taskList">
-                     <!-- Time Blocks will be added dynamically -->
-              </div>
-       </div>
+        <div id="taskList">
+            <!-- Time Blocks will be added dynamically -->
+        </div>
+    </div>
 
-       <script>
-              document.addEventListener("DOMContentLoaded", () => {
-                     const taskList = document.getElementById("taskList");
-                     const addTaskButton = document.getElementById("addTask");
-                     const todoHeading = document.getElementById("todoHeading");
-                     const clock = document.getElementById("clock");
-                     let closeTimeout;
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const taskList = document.getElementById("taskList");
+            const addTaskButton = document.getElementById("addTask");
+            const todoHeading = document.getElementById("todoHeading");
+            const clock = document.getElementById("clock");
+            let closeTimeout;
 
-                     function updateClock() {
-                            const now = new Date();
-                            let hours = now.getHours();
-                            const minutes = now.getMinutes().toString().padStart(2, '0');
-                            const seconds = now.getSeconds().toString().padStart(2, '0');
-                            const ampm = hours >= 12 ? "PM" : "AM";
-                            hours = hours % 12 || 12;
-                            clock.textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
-                     }
+            function updateClock() {
+                const now = new Date();
+                let hours = now.getHours();
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
+                const ampm = hours >= 12 ? "PM" : "AM";
+                hours = hours % 12 || 12;
+                clock.textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+            }
 
-                     setInterval(updateClock, 1000);
-                     updateClock();
+            setInterval(updateClock, 1000);
+            updateClock();
 
-                     function formatTime(hour, minute) {
-                            let period = hour < 12 ? "AM" : "PM";
-                            let displayHour = hour % 12 || 12;
-                            let nextHour = (hour + (minute + 30) / 60) % 24;
-                            let nextMinute = (minute + 30) % 60;
-                            let displayNextHour = nextHour % 12 || 12;
-                            let nextPeriod = nextHour < 12 ? "AM" : "PM";
-                            return `${displayHour}:${minute.toString().padStart(2, '0')} ${period} - ${displayNextHour}:${nextMinute.toString().padStart(2, '0')} ${nextPeriod}`;
-                     }
+            function formatTime(hour, minute) {
+                let period = hour < 12 ? "AM" : "PM";
+                let displayHour = hour % 12 || 12;
+                let nextHour = (hour + (minute + 30) / 60) % 24;
+                let nextMinute = (minute + 30) % 60;
+                let displayNextHour = nextHour % 12 || 12;
+                let nextPeriod = nextHour < 12 ? "AM" : "PM";
+                return `${displayHour}:${minute.toString().padStart(2, '0')} ${period} - ${displayNextHour}:${nextMinute.toString().padStart(2, '0')} ${nextPeriod}`;
+            }
 
-                     function saveTasks() {
-                            let tasks = [];
-                            document.querySelectorAll(".taskText").forEach((task, index) => {
-                                   tasks.push(task.textContent.trim());
-                            });
-                            localStorage.setItem("tasks", JSON.stringify(tasks));
-                     }
+            function saveTasks() {
+                let tasks = [];
+                document.querySelectorAll(".taskText").forEach((task, index) => {
+                    tasks.push(task.textContent.trim());
+                });
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+            }
 
-                     function loadTasks() {
-                            let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-                            document.querySelectorAll(".taskText").forEach((task, index) => {
-                                   if (savedTasks[index]) {
-                                          task.textContent = savedTasks[index];
-                                   }
-                            });
-                     }
+            function loadTasks() {
+                let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+                document.querySelectorAll(".taskText").forEach((task, index) => {
+                    if (savedTasks[index]) {
+                        task.textContent = savedTasks[index];
+                    }
+                });
+            }
 
-                     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                     const today = new Date().getDay();
-                     todoHeading.textContent = `${days[today]} `;
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const today = new Date().getDay();
+            todoHeading.textContent = `${days[today]} `;
 
-                     for (let h = 5; h < 24 + 5; h++) {
-                            let hour = h % 24;
-                            for (let m = 30; m < 60; m += 30) {
-                                   let timeSlot = formatTime(hour, m % 60);
-                                   let taskBlock = document.createElement("div");
-                                   taskBlock.classList.add("taskBlock");
-                                   taskBlock.innerHTML = `
-                        <div class="flex-items">
-                            <input type="checkbox" class="toggleTask w-4 h-4"/>
-                            <span style="font-weight:bold; ">${timeSlot}</span>
-                            <input type="checkbox" class="missedTask w-4 h-4"/>
-                        </div>
-                        <textarea class="taskInput" placeholder="Add task..."></textarea>
-                        <p class="taskText"></p>
-                    `;
-                                   taskList.appendChild(taskBlock);
-                            }
-                     }
+            for (let h = 5; h < 24 + 5; h++) {
+                let hour = h % 24;
+                for (let m = 0; m < 60; m += 30) {
+                    let timeSlot = formatTime(hour, m % 60);
+                    let taskBlock = document.createElement("div");
+                    taskBlock.classList.add("taskBlock");
+                    taskBlock.innerHTML = `
+            <div class="flex-items">
+                <input type="checkbox" class="toggleTask w-4 h-4"/>
+                <span style="font-weight:bold; ">${timeSlot}</span>
+                <input type="checkbox" class="missedTask w-4 h-4"/>
+            </div>
+            <textarea class="taskInput" placeholder="Add task..."></textarea>
+            <p class="taskText"></p>
+        `;
+                    taskList.appendChild(taskBlock);
+                }
+            }
 
-                     loadTasks();
+            loadTasks();
 
-                     addTaskButton.addEventListener("click", () => {
-                            document.querySelectorAll(".taskInput").forEach(input => input.style.display = "block");
-                            clearTimeout(closeTimeout);
-                     });
+            addTaskButton.addEventListener("click", () => {
+                document.querySelectorAll(".taskInput").forEach(input => input.style.display = "block");
+                clearTimeout(closeTimeout);
+            });
 
-                     document.addEventListener("click", (event) => {
-                            if (!event.target.closest("#taskList") && !event.target.closest("#addTask")) {
-                                   clearTimeout(closeTimeout);
-                                   closeTimeout = setTimeout(() => {
-                                          document.querySelectorAll(".taskInput").forEach(input => input.style.display = "none");
-                                          saveTasks(1000);
-                                   }, 1000);
-                            }
-                     });
+            document.addEventListener("click", (event) => {
+                if (!event.target.closest("#taskList") && !event.target.closest("#addTask")) {
+                    clearTimeout(closeTimeout);
+                    closeTimeout = setTimeout(() => {
+                        document.querySelectorAll(".taskInput").forEach(input => input.style.display = "none");
+                        saveTasks(1000);
+                    }, 1000);
+                }
+            });
 
-                     taskList.addEventListener("click", (event) => {
-                            if (event.target.classList.contains("toggleTask")) {
-                                   let parent = event.target.closest("div").parentNode;
-                                   parent.classList.toggle("bg-green-400");
-                                   parent.querySelector(".taskText").classList.toggle("line-through");
-                                   parent.querySelector("span").classList.toggle("line-through");
-                            }
-                            if (event.target.classList.contains("missedTask")) {
-                                   let parent = event.target.closest("div").parentNode;
-                                   parent.classList.toggle("bg-red-400");
-                            }
-                     });
+            taskList.addEventListener("click", (event) => {
+                if (event.target.classList.contains("toggleTask")) {
+                    let parent = event.target.closest("div").parentNode;
+                    parent.classList.toggle("bg-green-400");
+                    parent.querySelector(".taskText").classList.toggle("line-through");
+                    parent.querySelector("span").classList.toggle("line-through");
+                }
+                if (event.target.classList.contains("missedTask")) {
+                    let parent = event.target.closest("div").parentNode;
+                    parent.classList.toggle("bg-red-400");
+                }
+            });
 
-                     taskList.addEventListener("input", (event) => {
-                            if (event.target.classList.contains("taskInput")) {
-                                   let textArea = event.target;
-                                   let text = textArea.value;
-                                   let taskText = textArea.nextElementSibling;
-                                   taskText.textContent = text;
-                            }
-                     });
-              });
+            taskList.addEventListener("input", (event) => {
+                if (event.target.classList.contains("taskInput")) {
+                    let textArea = event.target;
+                    let text = textArea.value;
+                    let taskText = textArea.nextElementSibling;
+                    taskText.textContent = text;
+                }
+            });
+        });
 
-              document.addEventListener("DOMContentLoaded", () => {
-                     const taskList = document.getElementById("taskList");
-                     const addTaskButton = document.getElementById("addTask");
-                     let isEditing = false;
+        document.addEventListener("DOMContentLoaded", () => {
+            const taskList = document.getElementById("taskList");
+            const addTaskButton = document.getElementById("addTask");
+            let isEditing = false;
 
-                     function saveTasks() {
-                            let tasks = [];
-                            document.querySelectorAll(".taskText").forEach((task) => {
-                                   tasks.push(task.textContent.trim());
-                            });
-                            localStorage.setItem("tasks", JSON.stringify(tasks));
-                     }
+            function saveTasks() {
+                let tasks = [];
+                document.querySelectorAll(".taskText").forEach((task) => {
+                    tasks.push(task.textContent.trim());
+                });
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+            }
 
-                     addTaskButton.addEventListener("click", () => {
-                            isEditing = !isEditing;
-                            if (isEditing) {
-                                   document.querySelectorAll(".taskInput").forEach(input => input.style.display = "block");
-                                   addTaskButton.textContent = "Done";
-                            } else {
-                                   document.querySelectorAll(".taskInput").forEach(input => input.style.display = "none");
-                                   saveTasks();
-                                   addTaskButton.textContent = "Add Task";
-                            }
-                     });
-              });
-       </script>
+            addTaskButton.addEventListener("click", () => {
+                isEditing = !isEditing;
+                if (isEditing) {
+                    document.querySelectorAll(".taskInput").forEach(input => input.style.display = "block");
+                    addTaskButton.textContent = "Done";
+                } else {
+                    document.querySelectorAll(".taskInput").forEach(input => input.style.display = "none");
+                    saveTasks();
+                    addTaskButton.textContent = "Add Task";
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
