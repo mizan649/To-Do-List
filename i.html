@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="sw" href="sw.js">
+    <link rel="icon" href="icon.png">
+    <style>
+        /* background-color: #f6f3f3; */
+        body {
+            background-color: #f3f4f6;
+            /* লাল কালার */
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            /* Prevent horizontal scrolling */
+            margin: 0;
+            /* Remove default margin */
+            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            /* আপনি চাইলে এই মান পরিবর্তন করতে পারেন */
+            margin: 0 auto;
+            /* Center the container */
+            background-color: white;
+            /* সবুজ কালার */
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            /* Ensure padding is included in width */
+        }
+
+        #clock {
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: white;
+            background-color: #3b82f6;
+            padding: 2rem;
+            border-radius: 18px;
+            margin-bottom: 8px;
+        }
+
+        .flex-container {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding:0 7px;
+            /* flex-wrap: wrap; */
+            /* Allow wrapping on smaller screens */
+        }
+
+        #todoHeading {
+            padding: 0.75rem 2.5rem;
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 8px;
+            font-size: 1.125rem;
+            width: 50%;
+            margin-right: 0.5rem;
+        }
+
+        #addTask {
+            padding: 0.75rem 2.5rem;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.125rem;
+            width: 50%;
+            cursor: pointer;
+        }
+
+        #addTask:hover {
+            background-color: #2563eb;
+        }
+
+        #todoHeading,
+        #addTask {
+            width: 100%;
+            /* Full width on smaller screens */
+            margin: 0;
+            /* Add some margin for spacing */
+        }
+
+        #taskList {
+            display: flex;
+            flex-direction: column;
+            gap: .8rem;
+            width: 100%; 
+            /* background-color: #dcb9b9; */
+        }
+
+        .taskBlock {
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: #f5dddd;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            /* Ensure padding is included in width */
+        }
+
+        .taskBlock .flex-items {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .taskInput {
+            width: calc(100% - 1.5rem);
+            /* Adjust width to account for padding */
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.125rem;
+            display: none;
+            box-sizing: border-box;
+            /* Ensure padding is included in width */
+        }
+
+        .taskText {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 1.125rem;
+        }
+
+        .bg-green-400 {
+            background-color: #34d399;
+        }
+
+        .bg-red-400 {
+            background-color: #f87171;
+        }
+
+        .line-through {
+            text-decoration: line-through;
+        }
+
+        .taskBlock .flex-items span {
+            font-size: 1.2rem;
+            /* আপনি চাইলে এই মান পরিবর্তন করতে পারেন */
+            font-weight: bold;
+        }
+
+        /* চেকবক্সের কালার পরিবর্তন */
+        input[type="checkbox"].toggleTask {
+            accent-color: #34d399;
+            /* সবুজ কালার */
+        }
+
+        input[type="checkbox"].missedTask {
+            accent-color: #f87171;
+            /* লাল কালার */
+        }
+
+        /* ঘড়ির নিচে তারিখের স্টাইল */
+        #clock small {
+            font-weight: 300;
+            font-size: 1rem;
+            /* তারিখের সাইজ ছোটো করুন */
+            color: #efebeb;
+            /* তারিখের কালার পরিবর্তন করুন (ধূসর) */
+            display: block;
+            /* নতুন লাইনে দেখান */
+            margin-top: 0.2rem;
+            /* উপরে কিছু স্পেস যোগ করুন */
+        }
+
+        /* টাস্ক একশন বাটনের স্টাইল */
+.task-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.task-actions button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.done-btn {
+    background-color: #34d399; /* সবুজ */
+    color: white;
+}
+
+.not-yet-btn {
+    background-color: #f87171; /* লাল */
+    color: white;
+}
+
+/* টাস্কের ব্যাকগ্রাউন্ড কালার ও লেখার স্টাইল */
+.taskBlock.bg-green-400 {
+    background-color: #34d399; /* সবুজ ব্যাকগ্রাউন্ড */
+}
+
+.taskBlock.bg-red-400 {
+    background-color: #f87171; /* লাল ব্যাকগ্রাউন্ড */
+}
+
+.taskBlock .line-through {
+    text-decoration: line-through; /* লেখা কেটে যাবে */
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="clock"></div>
+        <div class="flex-container">
+            <h1 id="todoHeading"></h1>
+            <button id="addTask">Add Task</button>
+        </div>
+
+        <div id="taskList">
+            <!-- Time Blocks will be added dynamically -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const taskList = document.getElementById("taskList");
+            const addTaskButton = document.getElementById("addTask");            
+            const todoHeading = document.getElementById("todoHeading");
+            const clock = document.getElementById("clock");
+            let closeTimeout;
+
+            
+
+            function updateClock() {
+                const now = new Date();
+                let hours = now.getHours();
+                let minutes = now.getMinutes();
+                let seconds = now.getSeconds();
+                let milliseconds = now.getMilliseconds();
+
+                // // এক ঘরের সংখ্যার আগে শূন্য যোগ করুন
+                // hours = String(hours).padStart(2, '0'); // ঘন্টা (দুই ঘরে)
+                // minutes = String(minutes).padStart(2, '0'); // মিনিট (দুই ঘরে)
+                // seconds = String(seconds).padStart(2, '0'); // সেকেন্ড (দুই ঘরে)
+                // milliseconds = String(Math.floor(milliseconds / 10)).padStart(2, '0'); // মিলিসেকেন্ড (দুই ঘরে)
+
+                const ampm = hours >= 12 ? "PM" : "AM";
+                hours = hours % 12 || 12; // 12 ঘন্টা ফরম্যাটে পরিবর্তন
+
+                // তারিখ ফরম্যাট করুন
+                // const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                const dayName = days[now.getDay()];
+                const monthName = months[now.getMonth()];
+                const date = now.getDate();
+                const year = now.getFullYear();
+
+                const dateString = `${monthName} ${date}, ${year}`; // তারিখ ফরম্যাট
+
+                // ঘড়ি আপডেট করুন
+                clock.innerHTML = `${hours}:${minutes}:${seconds}:${milliseconds} ${ampm}<br><small>${dateString}</small>`;
+            }
+
+            // প্রতি মিলিসেকেন্ডে আপডেট করুন
+            setInterval(updateClock, 70);
+            // updateClock();
+
+            function formatTime(hour, minute) {
+                let period = hour < 12 ? "AM" : "PM";
+                let displayHour = hour % 12 || 12;
+                let nextMinute = minute + 45; // 45 মিনিট যোগ করুন
+                let nextHour = hour;
+                if (nextMinute >= 60) {
+                    nextMinute -= 60;
+                    nextHour += 1;
+                }
+                nextHour = nextHour % 24;
+                let displayNextHour = nextHour % 12 || 12;
+                let nextPeriod = nextHour < 12 ? "AM" : "PM";
+                return `${displayHour}:${minute.toString().padStart(2, '0')} ${period} - ${displayNextHour}:${nextMinute.toString().padStart(2, '0')} ${nextPeriod}`;
+            }
+
+            function saveTasks() {
+                let tasks = [];
+                document.querySelectorAll(".taskText").forEach((task, index) => {
+                    tasks.push(task.textContent.trim());
+                });
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+            }
+
+            function loadTasks() {
+                let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+                document.querySelectorAll(".taskText").forEach((task, index) => {
+                    if (savedTasks[index]) {
+                        task.textContent = savedTasks[index];
+                    }
+                });
+            }
+
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const today = new Date().getDay();
+            todoHeading.textContent = `${days[today]} `;
+
+            for (let h = 5; h < 24 + 5; h++) {
+                let hour = h % 24;
+                let timeSlot = formatTime(hour, 0); // 0 মিনিট থেকে শুরু করুন
+                let taskBlock = document.createElement("div");
+                taskBlock.classList.add("taskBlock");
+                taskBlock.innerHTML = `
+                <div class="flex-items">
+        <span style="font-weight:bold; ">${timeSlot}</span>
+    </div>
+    <textarea class="taskInput" placeholder="Add task..."></textarea>
+    <p class="taskText"></p>
+    <div class="task-actions" style="display: none;">
+        <button class="done-btn">Done</button>
+        <button class="not-yet-btn">Not Yet</button>
+    </div>
+    `;
+                taskList.appendChild(taskBlock);
+            }
+
+            loadTasks();
+
+            addTaskButton.addEventListener("click", () => {
+                document.querySelectorAll(".taskInput").forEach(input => input.style.display = "block");
+                clearTimeout(closeTimeout);
+            });
+
+            document.addEventListener("click", (event) => {
+                if (!event.target.closest("#taskList") && !event.target.closest("#addTask")) {
+                    clearTimeout(closeTimeout);
+                    closeTimeout = setTimeout(() => {
+                        document.querySelectorAll(".taskInput").forEach(input => input.style.display = "none");
+                        saveTasks(1000);
+                    }, 1000);
+                }
+            });
+
+            taskList.addEventListener("click", (event) => {
+                if (event.target.classList.contains("toggleTask")) {
+                    let parent = event.target.closest("div").parentNode;
+                    parent.classList.toggle("bg-green-400");
+                    parent.querySelector(".taskText").classList.toggle("line-through");
+                    parent.querySelector("span").classList.toggle("line-through");
+                }
+                if (event.target.classList.contains("missedTask")) {
+                    let parent = event.target.closest("div").parentNode;
+                    parent.classList.toggle("bg-red-400");
+                }
+            });
+
+            taskList.addEventListener("input", (event) => {
+                if (event.target.classList.contains("taskInput")) {
+                    let textArea = event.target;
+                    let text = textArea.value;
+                    let taskText = textArea.nextElementSibling;
+                    taskText.textContent = text;
+                }
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const taskList = document.getElementById("taskList");
+            const addTaskButton = document.getElementById("addTask");
+            let isEditing = false;
+
+            function saveTasks() {
+                let tasks = [];
+                document.querySelectorAll(".taskText").forEach((task) => {
+                    tasks.push(task.textContent.trim());
+                });
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+            }
+
+            addTaskButton.addEventListener("click", () => {
+                isEditing = !isEditing;
+                if (isEditing) {
+                    document.querySelectorAll(".taskInput").forEach(input => input.style.display = "block");
+                    addTaskButton.textContent = "Done";
+                } else {
+                    document.querySelectorAll(".taskInput").forEach(input => input.style.display = "none");
+                    saveTasks();
+                    addTaskButton.textContent = "Add Task";
+                }
+            });
+        });
+        
+    </script>
+</body>
+
+</html>

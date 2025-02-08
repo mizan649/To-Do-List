@@ -1,6 +1,6 @@
 {
-       "short_name": "MyPWA",
-       "name": "My Progressive Web App",
+       "short_name": "To Do",
+       "name": "To Do",
        "icons": [
          {
            "src": "icon.png",
