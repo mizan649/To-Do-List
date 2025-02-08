@@ -17,30 +17,26 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
             background: linear-gradient(135deg, #f2e9d0 0%, #5e84c0 100%);
             min-height: 100vh;
-            padding: 10px;
-            /* margin-top: 10px; */
-            
+            /* padding: 10px; */
         }
 
         .container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto;
         }
 
         .clock-container {
             text-align: center;
             margin-bottom: 30px;
-            /* background: #e6e6e6; */
+            /* padding-bottom: 30px; */
         }
 
         #clock {
             font-size: 3em;
             font-weight: 400;
-            color: #2c3e50;
-            color: #3498db;
             color: #5f6464;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
@@ -52,7 +48,8 @@
         }
 
         .task-container {
-            background: white;
+            /* background: white; */
+            /* background: linear-gradient(115deg, #e5e0d4 0%, #b4c9ec 80%); */
             border-radius: 15px;
             box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
             padding: 15px;
@@ -67,7 +64,9 @@
 
         .task-item {
             position: relative;
-            background: #f8f9fa;
+            background: #dbe1e2;
+            background: rgb(237, 241, 239);
+            /* background: linear-gradient(135deg, #f8f7f7 0%, #cccdcd 100%); */
             border-radius: 10px;
             padding: 15px;
             margin: 10px 0;
@@ -87,10 +86,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
         .placeholder-text  {
-            color: #95a5a6 ; 
+            color: #a8b5b6 !important; 
+            font-style: italic;
+        }
+        #d  {
+            color: #a8b5b6 !important; 
             font-style: italic;
         }
 
@@ -100,11 +105,11 @@
             left: 50%;
             transform: translateX(-50%);
             display: none;
-            /* gap: 15%; */
             background: white;
-            padding: 8px 5%;
+            padding: 10px 5%;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            gap: 8px;
         }
 
         .action-btn {
@@ -114,7 +119,6 @@
             cursor: pointer;
             transition: all 0.2s ease;
             font-weight: 500;
-            margin: 0 5%;
         }
 
         .done-btn {
@@ -124,6 +128,11 @@
 
         .edit-btn {
             background: #3498db;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #f1c40f;
             color: white;
         }
 
@@ -140,6 +149,10 @@
             background: #2980b9;
         }
 
+        .delete-btn:hover {
+            background: #f39c12;
+        }
+
         .notyet-btn:hover {
             background: #c0392b;
         }
@@ -150,8 +163,11 @@
             border: 2px solid #3498db;
             border-radius: 5px;
             margin-bottom: 10px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
         }
-
+        
         .completed {
             text-decoration: line-through;
             opacity: 0.7;
@@ -168,13 +184,19 @@
 </head>
 <body>
     <div class="container">
+       <div class="clock-container">
+              <div id="clock">00:00:00:00 AM</div>
+              <div id="date">Thursday, January 1, 1970</div>
+       </div>
+       <hr>
+       <hr>
         <div class="task-container" id="taskList">
-            <div class="clock-container">
+            <!-- <div class="clock-container">
                 <div id="clock">00:00:00:00 AM</div>
                 <div id="date">Thursday, January 1, 1970</div>
             </div>
             <hr>
-            <hr>
+            <hr> -->
         </div>
     </div>
 
@@ -216,11 +238,12 @@
                 taskDiv.innerHTML = `
                     <div class="time-slot">${startTime} - ${endTime}</div>
                     <div class="task-content">
-                    <span class="placeholder-text">Double Tap for Edit</span>
+                     <span class="placeholder-text" >Double Tap for Edit</span>
                     </div>
                     <div class="button-container">
                         <button class="action-btn done-btn">Done</button>
                         <button class="action-btn edit-btn">Edit</button>
+                        <button class="action-btn delete-btn">Delete</button>
                         <button class="action-btn notyet-btn">Not Yet</button>
                     </div>
                 `;
@@ -261,12 +284,39 @@
             });
         }
 
+        // Long press detection
+        let longPressTimer;
+        const longPressDuration = 500;
+
+        document.addEventListener('mousedown', startLongPress);
+        document.addEventListener('mouseup', cancelLongPress);
+        document.addEventListener('touchstart', startLongPress);
+        document.addEventListener('touchend', cancelLongPress);
+        document.addEventListener('touchcancel', cancelLongPress);
+
+        function startLongPress(e) {
+            const taskItem = e.target.closest('.task-item');
+            if(taskItem) {
+                longPressTimer = setTimeout(() => {
+                    showButtons(taskItem);
+                }, longPressDuration);
+            }
+        }
+
+        function cancelLongPress() {
+            clearTimeout(longPressTimer);
+        }
+
+        function showButtons(taskItem) {
+            const buttons = taskItem.querySelector('.button-container');
+            buttons.style.display = 'flex';
+        }
+
         // Task Interactions
         document.addEventListener('dblclick', function(e) {
             const taskItem = e.target.closest('.task-item');
             if(taskItem) {
-                const buttons = taskItem.querySelector('.button-container');
-                buttons.style.display = 'flex';
+                showButtons(taskItem);
             }
         });
 
@@ -274,6 +324,7 @@
             if(e.target.classList.contains('done-btn')) handleStatus(e, 'done');
             if(e.target.classList.contains('notyet-btn')) handleStatus(e, 'notyet');
             if(e.target.classList.contains('edit-btn')) handleEdit(e);
+            if(e.target.classList.contains('delete-btn')) handleDelete(e);
             
             // Hide buttons when clicking outside
             if(!e.target.closest('.task-item')) {
@@ -311,18 +362,29 @@
             
             if(btn.textContent === 'Edit') {
                 const currentText = content.innerText.replace('Double Tap for Edit', '').trim();
-                content.innerHTML = `<input class="task-input" value="${currentText}">`;
+                content.innerHTML = `<textarea class="task-input">${currentText}</textarea>`;
                 btn.textContent = 'Add';
+                content.querySelector('textarea').focus();
             } else {
-                const input = content.querySelector('input');
-                content.innerHTML = input.value || '<span class="placeholder-text">Double Tap for Edit</span>';
+                const textarea = content.querySelector('textarea');
+                content.innerHTML = textarea.value || '<span class="placeholder-text">Double Tap for Edit</span>';
                 
-                
-                if(input.value) content.querySelector('.placeholder-text')?.remove();
+                if(textarea.value) content.querySelector('.placeholder-text')?.remove();
                 btn.textContent = 'Edit';
                 taskItem.querySelector('.button-container').style.display = 'none';
                 saveTasks();
             }
+        }
+
+        function handleDelete(e) {
+            const taskItem = e.target.closest('.task-item');
+            const content = taskItem.querySelector('.task-content');
+            
+            content.innerHTML = '<span class="placeholder-text">Double Tap for Edit</span>';
+            taskItem.dataset.status = 'pending';
+            taskItem.className = 'task-item';
+            taskItem.querySelector('.button-container').style.display = 'none';
+            saveTasks();
         }
 
         // Initialize
