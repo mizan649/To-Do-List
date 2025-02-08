@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do List</title>
+    <title>Productivity Planner</title>
+
     <link rel="manifest" href="manifest.json">
     <link rel="sw" href="sw.js">
-    <link rel="icon" href="icon.png">
+    <link rel="icon" href="icon.png"> 
     <style>
-        * {
+         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -161,11 +161,10 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div class="clock-container">
-            <div id="clock">00:00:00 AM</div>
+            <div id="clock">00:00:00:00 AM</div>
             <div id="date">Thursday, January 1, 1970</div>
         </div>
 
@@ -176,104 +175,70 @@
         // Clock and Date
         function updateDateTime() {
             const now = new Date();
-
+            
             // Format time
             let hours = now.getHours();
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
+            const milliseconds = String(now.getMilliseconds()).padStart(3, '0').slice(0,2);
             const ampm = hours >= 12 ? 'PM' : 'AM';
-
+            
             hours = hours % 12 || 12;
             hours = String(hours).padStart(2, '0');
-
-            document.getElementById('clock').textContent =
-                `${hours}:${minutes}:${seconds} ${ampm}`;
+            
+            document.getElementById('clock').textContent = 
+                `${hours}:${minutes}:${seconds}       ${ampm}`;
 
             // Format date
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('date').textContent =
+            document.getElementById('date').textContent = 
                 now.toLocaleDateString('en-US', options);
         }
 
-        // লোকাল স্টোরেজে টাস্ক ডেটা সেভ করুন
-        function saveTasksToLocalStorage() {
-            const tasks = [];
-            document.querySelectorAll('.task-item').forEach(task => {
-                const timeSlot = task.querySelector('.time-slot').textContent;
-                const taskContent = task.querySelector('.task-content').innerHTML;
-                const status = task.dataset.status;
-                tasks.push({ timeSlot, taskContent, status });
-            });
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        // লোকাল স্টোরেজ থেকে টাস্ক ডেটা লোড করুন
-        function loadTasksFromLocalStorage() {
-    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    const container = document.getElementById('taskList');
-    container.innerHTML = ''; // আগের টাস্কগুলি ক্লিয়ার করুন
-
-    tasks.forEach(task => {
-        const taskDiv = document.createElement('div');
-        taskDiv.className = `task-item ${task.status}-task`;
-        taskDiv.dataset.status = task.status;
-        taskDiv.innerHTML = `
-            <div class="time-slot">${task.timeSlot}</div>
-            <div class="task-content ${task.status !== 'pending' ? 'completed' : ''}">${task.taskContent}</div>
-            <div class="button-container">
-                <button class="action-btn done-btn">${task.status === 'done' ? 'Cancel' : 'Done'}</button>
-                <button class="action-btn edit-btn">Edit</button>
-                <button class="action-btn notyet-btn">${task.status === 'notyet' ? 'Cancel' : 'Not Yet'}</button>
-            </div>
-        `;
-        container.appendChild(taskDiv);
-    });
-}
-
         // Generate Time Slots
         function generateTimeSlots() {
-    const container = document.getElementById('taskList');
-    let startHour = 5;
-
-    for (let i = 0; i < 24; i++) {
-        const currentHour = (startHour + i) % 24;
-        const startTime = `${currentHour % 12 || 12}:00 ${currentHour >= 12 ? 'PM' : 'AM'}`;
-        const endTime = `${currentHour % 12 || 12}:45 ${currentHour >= 12 ? 'PM' : 'AM'}`;
-
-        const taskDiv = document.createElement('div');
-        taskDiv.className = 'task-item';
-        taskDiv.dataset.status = 'pending';
-        taskDiv.innerHTML = `
-            <div class="time-slot">${startTime} - ${endTime}</div>
-            <div class="task-content">
-                <span class="placeholder-text">Double Tap for Edit</span>
-            </div>
-            <div class="button-container">
-                <button class="action-btn done-btn">Done</button>
-                <button class="action-btn edit-btn">Edit</button>
-                <button class="action-btn notyet-btn">Not Yet</button>
-            </div>
-        `;
-        container.appendChild(taskDiv);
-    }
-}
+            const container = document.getElementById('taskList');
+            let startHour = 5;
+            
+            for(let i = 0; i < 24; i++) {
+                const startTime = `${(startHour + i) % 12 || 12}:00 ${(startHour + i) >= 12 ? 'PM' : 'AM'}`;
+                const endTime = `${(startHour + i) % 12 || 12}:45 ${(startHour + i) >= 12 ? 'PM' : 'AM'}`;
+                
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'task-item';
+                taskDiv.innerHTML = `
+                    <div class="time-slot">${startTime} - ${endTime}</div>
+                    <div class="task-content">
+                        <span class="placeholder-text">Double Tap for Edit</span>
+                    </div>
+                    <div class="button-container">
+                        <button class="action-btn done-btn">Done</button>
+                        <button class="action-btn edit-btn">Edit</button>
+                        <button class="action-btn notyet-btn">Not Yet</button>
+                    </div>
+                `;
+                
+                taskDiv.dataset.status = 'pending';
+                container.appendChild(taskDiv);
+            }
+        }
 
         // Task Interactions
-        document.addEventListener('dblclick', function (e) {
+        document.addEventListener('dblclick', function(e) {
             const taskItem = e.target.closest('.task-item');
-            if (taskItem) {
+            if(taskItem) {
                 const buttons = taskItem.querySelector('.button-container');
                 buttons.style.display = 'flex';
             }
         });
 
-        document.addEventListener('click', function (e) {
-            if (e.target.classList.contains('done-btn')) handleStatus(e, 'done');
-            if (e.target.classList.contains('notyet-btn')) handleStatus(e, 'notyet');
-            if (e.target.classList.contains('edit-btn')) handleEdit(e);
-
+        document.addEventListener('click', function(e) {
+            if(e.target.classList.contains('done-btn')) handleStatus(e, 'done');
+            if(e.target.classList.contains('notyet-btn')) handleStatus(e, 'notyet');
+            if(e.target.classList.contains('edit-btn')) handleEdit(e);
+            
             // Hide buttons when clicking outside
-            if (!e.target.closest('.task-item')) {
+            if(!e.target.closest('.task-item')) {
                 document.querySelectorAll('.button-container').forEach(btn => {
                     btn.style.display = 'none';
                 });
@@ -284,8 +249,8 @@
             const taskItem = e.target.closest('.task-item');
             const content = taskItem.querySelector('.task-content');
             const btn = e.target;
-
-            if (btn.textContent === 'Cancel') {
+            
+            if(btn.textContent === 'Cancel') {
                 taskItem.dataset.status = 'pending';
                 content.classList.remove('completed');
                 taskItem.className = 'task-item';
@@ -296,35 +261,31 @@
                 taskItem.className = `task-item ${status}-task`;
                 btn.textContent = 'Cancel';
             }
-
+            
             taskItem.querySelector('.button-container').style.display = 'none';
-            saveTasksToLocalStorage(); // লোকাল স্টোরেজে সেভ করুন
         }
 
         function handleEdit(e) {
             const taskItem = e.target.closest('.task-item');
             const content = taskItem.querySelector('.task-content');
             const btn = e.target;
-
-            if (btn.textContent === 'Edit') {
+            
+            if(btn.textContent === 'Edit') {
                 const currentText = content.innerText.replace('Double Tap for Edit', '').trim();
                 content.innerHTML = `<input class="task-input" value="${currentText}">`;
                 btn.textContent = 'Add';
             } else {
                 const input = content.querySelector('input');
                 content.innerHTML = input.value || '<span class="placeholder-text">Double Tap for Edit</span>';
-                if (input.value) content.querySelector('.placeholder-text')?.remove();
+                if(input.value) content.querySelector('.placeholder-text')?.remove();
                 btn.textContent = 'Edit';
                 taskItem.querySelector('.button-container').style.display = 'none';
-                saveTasksToLocalStorage(); // লোকাল স্টোরেজে সেভ করুন
             }
         }
 
         // Initialize
         setInterval(updateDateTime, 10);
         generateTimeSlots();
-        loadTasksFromLocalStorage(); // লোকাল স্টোরেজ থেকে ডেটা লোড করুন
     </script>
 </body>
-
 </html>
