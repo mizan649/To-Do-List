@@ -232,30 +232,31 @@
 
         // Generate Time Slots
         function generateTimeSlots() {
-            const container = document.getElementById('taskList');
-            let startHour = 5;
+    const container = document.getElementById('taskList');
+    let startHour = 5;
 
-            for (let i = 0; i < 24; i++) {
-                const startTime = `${(startHour + i) % 12 || 12}:00 ${(startHour + i) >= 12 ? 'PM' : 'AM'}`;
-                const endTime = `${(startHour + i) % 12 || 12}:45 ${(startHour + i) >= 12 ? 'PM' : 'AM'}`;
+    for (let i = 0; i < 24; i++) {
+        const currentHour = (startHour + i) % 24;
+        const startTime = `${currentHour % 12 || 12}:00 ${currentHour >= 12 ? 'PM' : 'AM'}`;
+        const endTime = `${currentHour % 12 || 12}:45 ${currentHour >= 12 ? 'PM' : 'AM'}`;
 
-                const taskDiv = document.createElement('div');
-                taskDiv.className = 'task-item';
-                taskDiv.dataset.status = 'pending';
-                taskDiv.innerHTML = `
-                    <div class="time-slot">${startTime} - ${endTime}</div>
-                    <div class="task-content">
-                        <span class="placeholder-text">Double Tap for Edit</span>
-                    </div>
-                    <div class="button-container">
-                        <button class="action-btn done-btn">Done</button>
-                        <button class="action-btn edit-btn">Edit</button>
-                        <button class="action-btn notyet-btn">Not Yet</button>
-                    </div>
-                `;
-                container.appendChild(taskDiv);
-            }
-        }
+        const taskDiv = document.createElement('div');
+        taskDiv.className = 'task-item';
+        taskDiv.dataset.status = 'pending';
+        taskDiv.innerHTML = `
+            <div class="time-slot">${startTime} - ${endTime}</div>
+            <div class="task-content">
+                <span class="placeholder-text">Double Tap for Edit</span>
+            </div>
+            <div class="button-container">
+                <button class="action-btn done-btn">Done</button>
+                <button class="action-btn edit-btn">Edit</button>
+                <button class="action-btn notyet-btn">Not Yet</button>
+            </div>
+        `;
+        container.appendChild(taskDiv);
+    }
+}
 
         // Task Interactions
         document.addEventListener('dblclick', function (e) {
