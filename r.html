@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Planner</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="sw" href="sw.js">
+    <link rel="icon" href="icon.png"> 
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
+            background: linear-gradient(135deg, #f2e9d0 0%, #5e84c0 100%);
+            min-height: 100vh;
+            /* padding: 10px; */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .clock-container {
+            text-align: center;
+            margin-bottom: 30px;
+            /* padding-bottom: 30px; */
+        }
+
+        #clock {
+            font-size: 3em;
+            font-weight: 400;
+            color: #5f6464;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #date {
+            font-size: 1em;
+            color: #7f8c8d;
+            margin-top: 0px;
+        }
+
+        .task-container {
+            /* background: white; */
+            /* background: linear-gradient(115deg, #e5e0d4 0%, #b4c9ec 80%); */
+            border-radius: 15px;
+            box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+        }
+
+        .time-slot {
+            color: #3498db;
+            font-weight: 500;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .task-item {
+            position: relative;
+            background: #dbe1e2;
+            background: rgb(237, 241, 239);
+            /* background: linear-gradient(135deg, #f8f7f7 0%, #cccdcd 100%); */
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-content {
+            min-height: 40px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .placeholder-text  {
+            color: #a8b5b6 !important; 
+            font-style: italic;
+        }
+        #d  {
+            color: #a8b5b6 !important; 
+            font-style: italic;
+        }
+
+        .button-container {
+            position: relative;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            background: white;
+            padding: 10px 5%;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            gap: 8px;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 4px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .done-btn {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #f1c40f;
+            color: white;
+        }
+
+        .notyet-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .done-btn:hover {
+            background: #27ae60;
+        }
+
+        .edit-btn:hover {
+            background: #2980b9;
+        }
+
+        .delete-btn:hover {
+            background: #f39c12;
+        }
+
+        .notyet-btn:hover {
+            background: #c0392b;
+        }
+
+        .task-input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+        
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .done-task {
+            background: #d4efdf !important;
+        }
+
+        .notyet-task {
+            background: #fadbd8 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+       <div class="clock-container">
+              <div id="clock">00:00:00:00 AM</div>
+              <div id="date">Thursday, January 1, 1970</div>
+       </div>
+       <hr>
+       <hr>
+        <div class="task-container" id="taskList">
+            <!-- <div class="clock-container">
+                <div id="clock">00:00:00:00 AM</div>
+                <div id="date">Thursday, January 1, 1970</div>
+            </div>
+            <hr>
+            <hr> -->
+        </div>
+    </div>
+
+    <script>
+        // Clock and Date
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Format time
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const milliseconds = String(now.getMilliseconds()).padStart(3, '0').slice(0,2);
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            hours = hours % 12 || 12;
+            hours = String(hours).padStart(2, '0');
+            
+            document.getElementById('clock').textContent = 
+                `${hours}:${minutes}:${seconds}       ${ampm}`;
+
+            // Format date
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = 
+                now.toLocaleDateString('en-US', options);
+        }
+
+        // Generate Time Slots
+        function generateTimeSlots() {
+            const container = document.getElementById('taskList');
+            let startHour = 5;
+            
+            for(let i = 0; i < 24; i++) {
+                const startTime = `${(startHour + i) % 12 || 12}:00 ${(startHour + i) >= 12 ? 'PM' : 'AM'}`;
+                const endTime = `${(startHour + i) % 12 || 12}:45 ${(startHour + i) >= 12 ? 'PM' : 'AM'}`;
+                
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'task-item';
+                taskDiv.innerHTML = `
+                    <div class="time-slot">${startTime} - ${endTime}</div>
+                    <div class="task-content">
+                     <span class="placeholder-text" >Double Tap for Edit</span>
+                    </div>
+                    <div class="button-container">
+                        <button class="action-btn done-btn">Done</button>
+                        <button class="action-btn edit-btn">Edit</button>
+                        <button class="action-btn delete-btn">Delete</button>
+                        <button class="action-btn notyet-btn">Not Yet</button>
+                    </div>
+                `;
+                
+                taskDiv.dataset.status = 'pending';
+                container.appendChild(taskDiv);
+            }
+        }
+
+        // Save tasks to localStorage
+        function saveTasks() {
+            const tasks = [];
+            document.querySelectorAll('.task-item').forEach(task => {
+                const content = task.querySelector('.task-content').innerText;
+                const status = task.dataset.status;
+                tasks.push({ content, status });
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Load tasks from localStorage
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const taskItems = document.querySelectorAll('.task-item');
+            taskItems.forEach((task, index) => {
+                if (tasks[index]) {
+                    const content = task.querySelector('.task-content');
+                     content.innerHTML = tasks[index].content || '<span class="placeholder-text" >Double Tap for Edit</span>';
+                    task.dataset.status = tasks[index].status;
+                    if (tasks[index].status === 'done') {
+                        content.classList.add('completed');
+                        task.className = 'task-item done-task';
+                    } else if (tasks[index].status === 'notyet') {
+                        content.classList.add('completed');
+                        task.className = 'task-item notyet-task';
+                    }
+                }
+            });
+        }
+
+        // Long press detection
+        let longPressTimer;
+        const longPressDuration = 500;
+
+        document.addEventListener('mousedown', startLongPress);
+        document.addEventListener('mouseup', cancelLongPress);
+        document.addEventListener('touchstart', startLongPress);
+        document.addEventListener('touchend', cancelLongPress);
+        document.addEventListener('touchcancel', cancelLongPress);
+
+        function startLongPress(e) {
+            const taskItem = e.target.closest('.task-item');
+            if(taskItem) {
+                longPressTimer = setTimeout(() => {
+                    showButtons(taskItem);
+                }, longPressDuration);
+            }
+        }
+
+        function cancelLongPress() {
+            clearTimeout(longPressTimer);
+        }
+
+        function showButtons(taskItem) {
+            const buttons = taskItem.querySelector('.button-container');
+            buttons.style.display = 'flex';
+        }
+
+        // Task Interactions
+        document.addEventListener('dblclick', function(e) {
+            const taskItem = e.target.closest('.task-item');
+            if(taskItem) {
+                showButtons(taskItem);
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if(e.target.classList.contains('done-btn')) handleStatus(e, 'done');
+            if(e.target.classList.contains('notyet-btn')) handleStatus(e, 'notyet');
+            if(e.target.classList.contains('edit-btn')) handleEdit(e);
+            if(e.target.classList.contains('delete-btn')) handleDelete(e);
+            
+            // Hide buttons when clicking outside
+            if(!e.target.closest('.task-item')) {
+                document.querySelectorAll('.button-container').forEach(btn => {
+                    btn.style.display = 'none';
+                });
+            }
+        });
+
+        function handleStatus(e, status) {
+            const taskItem = e.target.closest('.task-item');
+            const content = taskItem.querySelector('.task-content');
+            const btn = e.target;
+            
+            if(btn.textContent === 'Cancel') {
+                taskItem.dataset.status = 'pending';
+                content.classList.remove('completed');
+                taskItem.className = 'task-item';
+                btn.textContent = status === 'done' ? 'Done' : 'Not Yet';
+            } else {
+                taskItem.dataset.status = status;
+                content.classList.add('completed');
+                taskItem.className = `task-item ${status}-task`;
+                btn.textContent = 'Cancel';
+            }
+            
+            taskItem.querySelector('.button-container').style.display = 'none';
+            saveTasks();
+        }
+
+        function handleEdit(e) {
+            const taskItem = e.target.closest('.task-item');
+            const content = taskItem.querySelector('.task-content');
+            const btn = e.target;
+            
+            if(btn.textContent === 'Edit') {
+                const currentText = content.innerText.replace('Double Tap for Edit', '').trim();
+                content.innerHTML = `<textarea class="task-input">${currentText}</textarea>`;
+                btn.textContent = 'Add';
+                content.querySelector('textarea').focus();
+            } else {
+                const textarea = content.querySelector('textarea');
+                content.innerHTML = textarea.value || '<span class="placeholder-text">Double Tap for Edit</span>';
+                
+                if(textarea.value) content.querySelector('.placeholder-text')?.remove();
+                btn.textContent = 'Edit';
+                taskItem.querySelector('.button-container').style.display = 'none';
+                saveTasks();
+            }
+        }
+
+        function handleDelete(e) {
+            const taskItem = e.target.closest('.task-item');
+            const content = taskItem.querySelector('.task-content');
+            
+            content.innerHTML = '<span class="placeholder-text">Double Tap for Edit</span>';
+            taskItem.dataset.status = 'pending';
+            taskItem.className = 'task-item';
+            taskItem.querySelector('.button-container').style.display = 'none';
+            saveTasks();
+        }
+
+        // Initialize
+        setInterval(updateDateTime, 10);
+        generateTimeSlots();
+        loadTasks();
+    </script>
+</body>
+</html>
