@@ -89,8 +89,8 @@
             justify-content: center;
         }
 
-        .placeholder-text {
-            color: #95a5a6;
+        .placeholder-text  {
+            color: #95a5a6 ; 
             font-style: italic;
         }
 
@@ -168,11 +168,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- <div class="clock-container">
-            <div id="clock">00:00:00:00 AM</div>
-            <div id="date">Thursday, January 1, 1970</div>
-        </div> -->
-
         <div class="task-container" id="taskList">
             <div class="clock-container">
                 <div id="clock">00:00:00:00 AM</div>
@@ -221,7 +216,7 @@
                 taskDiv.innerHTML = `
                     <div class="time-slot">${startTime} - ${endTime}</div>
                     <div class="task-content">
-                        <span class="placeholder-text">Double Tap for Edit</span>
+                    <span class="placeholder-text">Double Tap for Edit</span>
                     </div>
                     <div class="button-container">
                         <button class="action-btn done-btn">Done</button>
@@ -233,6 +228,37 @@
                 taskDiv.dataset.status = 'pending';
                 container.appendChild(taskDiv);
             }
+        }
+
+        // Save tasks to localStorage
+        function saveTasks() {
+            const tasks = [];
+            document.querySelectorAll('.task-item').forEach(task => {
+                const content = task.querySelector('.task-content').innerText;
+                const status = task.dataset.status;
+                tasks.push({ content, status });
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Load tasks from localStorage
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const taskItems = document.querySelectorAll('.task-item');
+            taskItems.forEach((task, index) => {
+                if (tasks[index]) {
+                    const content = task.querySelector('.task-content');
+                     content.innerHTML = tasks[index].content || '<span class="placeholder-text" >Double Tap for Edit</span>';
+                    task.dataset.status = tasks[index].status;
+                    if (tasks[index].status === 'done') {
+                        content.classList.add('completed');
+                        task.className = 'task-item done-task';
+                    } else if (tasks[index].status === 'notyet') {
+                        content.classList.add('completed');
+                        task.className = 'task-item notyet-task';
+                    }
+                }
+            });
         }
 
         // Task Interactions
@@ -275,6 +301,7 @@
             }
             
             taskItem.querySelector('.button-container').style.display = 'none';
+            saveTasks();
         }
 
         function handleEdit(e) {
@@ -289,15 +316,19 @@
             } else {
                 const input = content.querySelector('input');
                 content.innerHTML = input.value || '<span class="placeholder-text">Double Tap for Edit</span>';
+                
+                
                 if(input.value) content.querySelector('.placeholder-text')?.remove();
                 btn.textContent = 'Edit';
                 taskItem.querySelector('.button-container').style.display = 'none';
+                saveTasks();
             }
         }
 
         // Initialize
         setInterval(updateDateTime, 10);
         generateTimeSlots();
+        loadTasks();
     </script>
 </body>
 </html>
